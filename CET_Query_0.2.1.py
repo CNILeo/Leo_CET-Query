@@ -1,4 +1,13 @@
 # -*- coding: utf-8 -*-
+
+'''
+0.2.1版本使用说明：
+本脚本能且仅能在Python 3环境下运行
+如果提示No modolued named 'requests'在CMD输入pip install requests即可解决
+本代码版权归TJPU-Leo所有
+禁止用于商业用途
+'''
+
 import requests
 import random
 import socket
