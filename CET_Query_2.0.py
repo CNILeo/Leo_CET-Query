@@ -40,7 +40,7 @@ while 1:
         break
     else:
         print(param['zkzh'], '尝试失败')
-		if zwh_gd:
+        if zwh_gd:
             zkzh = zkzh + 100
         else:
             zkzh += 1
