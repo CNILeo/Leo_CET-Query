@@ -8,3 +8,10 @@
         新增了防止requests.exceptions.ChunkedEncodingError的错误
         现在查询接口速度已经恢复正常
         使用说明见源码，将有说明的地方修改成自己的参数即可。
+		感谢大家的支持！
+		![支付宝赞赏码][1]
+		![微信赞赏码][2]
+
+
+  [1]: http://www.iot-leo.cn/AliPay.jpg
+  [2]: http://www.iot-leo.cn/WeChat.JPG
