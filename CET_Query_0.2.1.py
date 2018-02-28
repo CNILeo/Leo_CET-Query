@@ -13,6 +13,11 @@ import random
 import socket
 import struct
 
+print '本程序来自https://github.com/CNILeo/Leo_CET-Query'
+print '     版权归TJPU-Leo所有，严禁用于商业用途！      '
+print '        如在使用本软件的过程中出现报错           '
+print '            可加入QQ群362699550反馈              '
+
 HEADERS = {
     'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:58.0) Gecko/20100101 Firefox/58.0',
     'Referer': 'http://www.chsi.com.cn/cet',
