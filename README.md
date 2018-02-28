@@ -8,5 +8,8 @@
         新增了防止requests.exceptions.ChunkedEncodingError的错误
         现在查询接口速度已经恢复正常
         使用说明见源码，将有说明的地方修改成自己的参数即可。
+		已知问题
+		1.输入已经的准考证和姓名会显示尝试失败，这是由于该正确的准考证和姓名查询太多次已经被列入查询黑名单
+		2.没有查询成功过的正确准考证和姓名不会出现该情况
 		感谢大家的支持！
 <div style="align: center"> <img src="http://www.iot-leo.cn/AliPay.jpg"> </div>
