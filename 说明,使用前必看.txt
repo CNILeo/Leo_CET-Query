@@ -13,3 +13,8 @@ Beta 0.2.1 更新说明
 中国教育考试网（NEEA） Beta 0.1版本说明：
 该版本使用TensorFlow训练出来的CNN模型直接识别验证码
 直接运行即可,无需修改参数
+
+
+使用说明:
+学信网(CHSI)版本须在Python 3环境运行，且运行前须在cmd内输入pip3 install requests,并且修改参数
+中国教育考试网（NEEA）须在Python 2环境运行，且运行前须在cmd内输入pip2 install requests
