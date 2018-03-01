@@ -12,6 +12,7 @@ import requests
 import random
 import socket
 import struct
+import os
 
 print ('本程序来自https://github.com/CNILeo/Leo_CET-Query')
 print ('     版权归TJPU-Leo所有，严禁用于商业用途！      ')
@@ -52,6 +53,9 @@ while 1:
     if '写作和翻译' in rsp.text:
         print(param['zkzh'], '查询成功')
         break
+    elif '验证码' in rsp.text:
+        print('Error : 获取到验证码')
+        continue
     else:
         print(param['zkzh'], '尝试失败')
         if zwh_gd:
@@ -62,4 +66,4 @@ while 1:
             if temp % 100 == 0:
                 zkzh = zkzh + 70
         param['zkzh'] = zkzh
-raw_input()
+os.system('pause')
