@@ -3,7 +3,7 @@
         QQ群:362699550  
         本群将会实时更新查询脚本
         
-        使用说明: 
+        使用说明:  
             学信网(CHSI)版本须在Python 3环境运行，且运行前须在cmd内输入pip3 install requests,并且修改参数
             中国教育考试网（NEEA）须在Python 2环境运行，且运行前须在cmd内输入pip2 install requests
         

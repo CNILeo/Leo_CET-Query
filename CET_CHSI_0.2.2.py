@@ -29,15 +29,15 @@ param={
         'zkzh':'',
         'xm':''}
 
-xxdm = 212320 #请自行修改学校代码
-type = 2 #四级修改为1，六级修改为2
-kc = 150 #考场默认从1开始，可以自行修改
-zwh = 1 #座位号默认从医开始，可以自行修改
+xxdm = 120040 #请自行修改学校代码
+type = 1 #四级修改为1，六级修改为2
+kc = 1 #考场默认从1开始，可以自行修改
+zwh = 1 #座位号默认从1开始，可以自行修改
 zwh_gd = 0 #确认座位号的请把0修改为1
 zkzh = (((xxdm*1000 + 172)*10+ type)*1000 + kc) * 100 + zwh #切勿修改此处
 param['zkzh']=zkzh
 print (param['zkzh'])
-param['xm']='卢晓婷' #单引号内修改为自己的姓名
+param['xm']='天津工业大学' #单引号内修改为自己的姓名
 
 while 1:
     IP = socket.inet_ntoa(struct.pack('>I', random.randint(1, 0xffffffff)))
@@ -62,3 +62,4 @@ while 1:
             if temp % 100 == 0:
                 zkzh = zkzh + 70
         param['zkzh'] = zkzh
+raw_input()
