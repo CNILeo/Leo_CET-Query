@@ -58,7 +58,11 @@ kc = input()
 zkzh = (((xxdm*1000 + 172)*10+ type)*1000 + kc) * 100 + zwh #切勿修改此处
 print '请输入姓名'
 name = raw_input()
-values['data']='CET6_172_DANGCI,'+bytes(zkzh)+','+name
+if type == 1:
+    Type = 'CET4_172_DANGCI,'
+elif type == 2:
+    Type = 'CET6_172_DANGCI,'
+values['data']=Type+bytes(zkzh)+','+name
 test_url = 'http://cache.neea.edu.cn/Imgs.do?c=CET&ik=' + bytes(zkzh) + '&t=0.6178564395368832'
 print '正在尝试'+bytes(zkzh)
 while 1:
@@ -93,7 +97,7 @@ while 1:
         print '下载验证码超时，如多次超时请检查网络'
         continue
     f = open('yzm.png', 'rb').read()
-    url = 'http://120.79.199.172:7775/api'
+    url = 'http://127.0.0.1:6966/api'
     try:
         yzm = requests.post(url,data = f,timeout=5).text.lower()
     except:
@@ -123,7 +127,7 @@ while 1:
             temp = zkzh - 31
             if temp % 100 == 0:
                 zkzh = zkzh + 70
-        values['data'] = 'CET6_172_DANGCI,' + bytes(zkzh) +','+name
+        values['data'] = Type + bytes(zkzh) +','+name
         test_url = 'http://cache.neea.edu.cn/Imgs.do?c=CET&ik=' + bytes(zkzh) + '&t=0.6178564395368832'
         print '正在尝试'+bytes(zkzh)
     if 'z' in result:
