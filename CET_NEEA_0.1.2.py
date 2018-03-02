@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 
 '''
 NEEA Beta 1.0版本使用说明：
@@ -15,11 +15,11 @@ import urllib2
 import cookielib
 import requests
 import socket
+import sys
+import os
+reload(sys)
 
-print '本程序来自https://github.com/CNILeo/Leo_CET-Query'
-print '     版权归TJPU-Leo所有，严禁用于商业用途！      '
-print '        如在使用本软件的过程中出现报错           '
-print '            可加入QQ群362699550反馈              '
+sys.setdefaultencoding('utf8')
 
 socket.setdefaulttimeout(5)
 
@@ -49,35 +49,36 @@ kc = 1 #考场默认从1开始，可以自行修改
 zwh = 1 #座位号默认从1开始，可以自行修改
 zwh_gd = 0 #确认座位号的请把0修改为1
 name = '天津工业大学'#修改为自己的名字
-print '请输入学校6位代码，请自行在百度查询'
+print u'请输入学校6位代码，请自行在百度查询'
 xxdm = input()
-print '四级请输入1，六级请输入2'
+print u'四级请输入1，六级请输入2'
 type = input()
-print '请输入开始搜索的考场号，不输入则从1号考场开始搜索'
+print u'请输入开始搜索的考场号，不输入则从1号考场开始搜索'
 kc = input()
 zkzh = (((xxdm*1000 + 172)*10+ type)*1000 + kc) * 100 + zwh #切勿修改此处
-print '请输入姓名'
-name = raw_input()
+print u'请输入姓名'
+name = raw_input().decode(sys.stdin.encoding or locale.getpreferredencoding(True))
+print name
 if type == 1:
     Type = 'CET4_172_DANGCI,'
 elif type == 2:
     Type = 'CET6_172_DANGCI,'
 values['data']=Type+bytes(zkzh)+','+name
 test_url = 'http://cache.neea.edu.cn/Imgs.do?c=CET&ik=' + bytes(zkzh) + '&t=0.6178564395368832'
-print '正在尝试'+bytes(zkzh)
+print u'正在尝试'+bytes(zkzh)
 while 1:
     # 第一次请求网页得到cookie
     request = urllib2.Request(loginUrl, None, headers=header)
     try:
         response = opener.open(request,timeout=5)
     except:
-        print '访问超时，如多次超时请检查网络'
+        print u'访问超时，如多次超时请检查网络'
         continue
     request = urllib2.Request(test_url, None, header)
     try:
         cache = opener.open(request,timeout=5)
     except:
-        print '执行验证码获取脚本，如多次超时请检查网络'
+        print u'执行验证码获取脚本，如多次超时请检查网络'
         continue
     yzm = cache.read().decode('utf-8')
     #print yzm
@@ -86,22 +87,22 @@ while 1:
     try:
         yzm_url = url[0]
     except:
-        print '验证码地址获取超时，如多次超时请检查网络'
+        print u'验证码地址获取超时，如多次超时请检查网络'
         continue
     try:
         urlretrieve(yzm_url, 'yzm.png')
     except urllib.ContentTooShortError:
-        print '下载验证码超时，如多次超时请检查网络'
+        print u'下载验证码超时，如多次超时请检查网络'
         continue
     except IOError:
-        print '下载验证码超时，如多次超时请检查网络'
+        print u'下载验证码超时，如多次超时请检查网络'
         continue
     f = open('yzm.png', 'rb').read()
-    url = 'http://127.0.0.1:6966/api'
+    url = 'http://139.199.83.62:7775/api'
     try:
         yzm = requests.post(url,data = f,timeout=5).text.lower()
     except:
-        print '验证码识别超时，如多次超时请检查网络'
+        print u'验证码识别超时，如多次超时请检查网络'
         continue
     values['v'] = yzm
     #带验证码模拟登陆
@@ -110,12 +111,12 @@ while 1:
     try:
         response = opener.open(request, timeout = 5)
     except:
-        print '提交准考证超时，如多次超时请检查网络'
+        print u'提交准考证超时，如多次超时请检查网络'
         continue
     try:
         result = response.read().decode('utf-8')
     except:
-        print '获取查询结果超时，如多次超时请检查网络'
+        print u'获取查询结果超时，如多次超时请检查网络'
         continue
     if u'验证码错误' in result:
         continue
@@ -129,7 +130,8 @@ while 1:
                 zkzh = zkzh + 70
         values['data'] = Type + bytes(zkzh) +','+name
         test_url = 'http://cache.neea.edu.cn/Imgs.do?c=CET&ik=' + bytes(zkzh) + '&t=0.6178564395368832'
-        print '正在尝试'+bytes(zkzh)
+        print u'正在尝试'+bytes(zkzh)
     if 'z' in result:
-        print '查找成功，准考证为：'+bytes(zkzh)
+        print u'查找成功，准考证为：'+bytes(zkzh)
         break
+os.system('pause')
