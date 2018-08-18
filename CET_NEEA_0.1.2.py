@@ -14,15 +14,16 @@ from urllib import urlretrieve
 import urllib2
 import cookielib
 import requests
+import struct
 import socket
 import sys
 import os
+import random
 reload(sys)
 
 sys.setdefaultencoding('utf8')
 
-socket.setdefaulttimeout(5)
-
+socket.setdefaulttimeout(1)
 loginUrl = 'http://cet.neea.edu.cn/cet/'
 queryUrl= 'http://cache.neea.edu.cn/cet/query'
 
@@ -42,30 +43,23 @@ header = {
     'User-Agent':'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
     'Referer':'http://cet.neea.edu.cn/cet/'
 }
-
-xxdm = 120040 #请自行修改学校代码
-type = 1 #四级修改为1，六级修改为2
-kc = 1 #考场默认从1开始，可以自行修改
+xxdm = 12004 #请自行修改学校代码
+type = 2 #四级修改为1，六级修改为2
+kc = 83 #考场默认从1开始，可以自行修改
 zwh = 1 #座位号默认从1开始，可以自行修改
 zwh_gd = 0 #确认座位号的请把0修改为1
-name = '天津工业大学'#修改为自己的名字
-print u'请输入学校6位代码，请自行在百度查询'
-xxdm = input()
-print u'四级请输入1，六级请输入2'
-type = input()
-print u'请输入开始搜索的考场号，不输入则从1号考场开始搜索'
-kc = input()
+name = '杨庆新'#修改为自己的名字
 zkzh = (((xxdm*1000 + 172)*10+ type)*1000 + kc) * 100 + zwh #切勿修改此处
-print u'请输入姓名'
-name = raw_input().decode(sys.stdin.encoding or locale.getpreferredencoding(True))
 print name
 if type == 1:
     Type = 'CET4_172_DANGCI,'
 elif type == 2:
     Type = 'CET6_172_DANGCI,'
 values['data']=Type+bytes(zkzh)+','+name
-test_url = 'http://cache.neea.edu.cn/Imgs.do?c=CET&ik=' + bytes(zkzh) + '&t=0.6178564395368832'
+print values['data']
+test_url = 'http://cache.neea.edu.cn/Imgs.do?c=CET&ik=' + bytes(zkzh) + '&t=0.7777564395368832'
 print u'正在尝试'+bytes(zkzh)
+i=0
 while 1:
     # 第一次请求网页得到cookie
     request = urllib2.Request(loginUrl, None, headers=header)
@@ -76,11 +70,16 @@ while 1:
         continue
     request = urllib2.Request(test_url, None, header)
     try:
-        cache = opener.open(request,timeout=5)
+        cache = opener.open(request,timeout=1)
     except:
         print u'执行验证码获取脚本，如多次超时请检查网络'
         continue
-    yzm = cache.read().decode('utf-8')
+    try:
+        yzm = cache.read().decode('utf-8')
+    except socket.timeout:
+        continue
+    except socket.error:
+        continue
     #print yzm
     pattern = re.compile('"(.*?)"', re.S)
     url = re.findall(pattern, yzm)
@@ -97,8 +96,10 @@ while 1:
     except IOError:
         print u'下载验证码超时，如多次超时请检查网络'
         continue
+    i+=1
+    print "第"+bytes(i)+"次"
     f = open('yzm.png', 'rb').read()
-    url = 'http://139.199.83.62:7775/api'
+    url = 'http://58.218.207.205:7775/api'
     try:
         yzm = requests.post(url,data = f,timeout=5).text.lower()
     except:
@@ -125,6 +126,7 @@ while 1:
             zkzh = zkzh + 100
         else:
             zkzh += 1
+            kc += 1
             temp = zkzh - 31
             if temp % 100 == 0:
                 zkzh = zkzh + 70
@@ -133,5 +135,5 @@ while 1:
         print u'正在尝试'+bytes(zkzh)
     if 'z' in result:
         print u'查找成功，准考证为：'+bytes(zkzh)
+        os.system('C:\\Users\\Leo\\Desktop\\find.mp3')
         break
-os.system('pause')
