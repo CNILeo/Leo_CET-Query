@@ -21,6 +21,47 @@ import os
 import random
 reload(sys)
 
+class Chaojiying_Client(object):
+
+    def __init__(self, username, password, soft_id):
+        self.username = username
+		password =  password.encode('utf8')
+        self.password = md5(password).hexdigest()
+        self.soft_id = soft_id
+        self.base_params = {
+            'user': self.username,
+            'pass2': self.password,
+            'softid': self.soft_id,
+        }
+        self.headers = {
+            'Connection': 'Keep-Alive',
+            'User-Agent': 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0)',
+        }
+
+    def PostPic(self, im, codetype):
+        """
+        im: 图片字节
+        codetype: 题目类型 参考 http://www.chaojiying.com/price.html
+        """
+        params = {
+            'codetype': codetype,
+        }
+        params.update(self.base_params)
+        files = {'userfile': ('ccc.jpg', im)}
+        r = requests.post('http://upload.chaojiying.net/Upload/Processing.php', data=params, files=files, headers=self.headers)
+        return r.json()
+
+    def ReportError(self, im_id):
+        """
+        im_id:报错题目的图片ID
+        """
+        params = {
+            'id': im_id,
+        }
+        params.update(self.base_params)
+        r = requests.post('http://upload.chaojiying.net/Upload/ReportError.php', data=params, headers=self.headers)
+        return r.json()
+
 sys.setdefaultencoding('utf8')
 
 socket.setdefaulttimeout(1)
@@ -43,23 +84,23 @@ header = {
     'User-Agent':'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
     'Referer':'http://cet.neea.edu.cn/cet/'
 }
-xxdm = 12004 #请自行修改学校代码
+xxdm = 120040 #请自行修改学校代码
 type = 2 #四级修改为1，六级修改为2
 kc = 83 #考场默认从1开始，可以自行修改
 zwh = 1 #座位号默认从1开始，可以自行修改
 zwh_gd = 0 #确认座位号的请把0修改为1
 name = '杨庆新'#修改为自己的名字
-zkzh = (((xxdm*1000 + 172)*10+ type)*1000 + kc) * 100 + zwh #切勿修改此处
+zkzh = (((xxdm*1000 + 181)*10+ type)*1000 + kc) * 100 + zwh #切勿修改此处
 print name
 if type == 1:
-    Type = 'CET4_172_DANGCI,'
+    Type = 'CET4_181_DANGCI,'
 elif type == 2:
-    Type = 'CET6_172_DANGCI,'
+    Type = 'CET6_181_DANGCI,'
 values['data']=Type+bytes(zkzh)+','+name
 print values['data']
-test_url = 'http://cache.neea.edu.cn/Imgs.do?c=CET&ik=' + bytes(zkzh) + '&t=0.7777564395368832'
+test_url = 'http://cache.neea.edu.cn/Imgs.do?c=CET&ik=' + bytes(zkzh) + '&t=0.2626517146154804'
 print u'正在尝试'+bytes(zkzh)
-i=0
+chaojiying = Chaojiying_Client('超级鹰用户名', '超级鹰用户名的密码', '96001') #修改为超级鹰的账号密码
 while 1:
     # 第一次请求网页得到cookie
     request = urllib2.Request(loginUrl, None, headers=header)
@@ -70,7 +111,7 @@ while 1:
         continue
     request = urllib2.Request(test_url, None, header)
     try:
-        cache = opener.open(request,timeout=1)
+        cache = opener.open(request,timeout=60)
     except:
         print u'执行验证码获取脚本，如多次超时请检查网络'
         continue
@@ -96,12 +137,9 @@ while 1:
     except IOError:
         print u'下载验证码超时，如多次超时请检查网络'
         continue
-    i+=1
-    print "第"+bytes(i)+"次"
     f = open('yzm.png', 'rb').read()
-    url = 'http://58.218.207.205:7775/api'
     try:
-        yzm = requests.post(url,data = f,timeout=5).text.lower()
+        yzm = chaojiying.PostPic(f, 1902)
     except:
         print u'验证码识别超时，如多次超时请检查网络'
         continue
