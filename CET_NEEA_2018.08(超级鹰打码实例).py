@@ -20,12 +20,13 @@ import sys
 import os
 import random
 reload(sys)
+from hashlib import md5
 
 class Chaojiying_Client(object):
 
     def __init__(self, username, password, soft_id):
         self.username = username
-		password =  password.encode('utf8')
+        password =  password.encode('utf8')
         self.password = md5(password).hexdigest()
         self.soft_id = soft_id
         self.base_params = {
@@ -85,11 +86,11 @@ header = {
     'Referer':'http://cet.neea.edu.cn/cet/'
 }
 xxdm = 120040 #请自行修改学校代码
-type = 2 #四级修改为1，六级修改为2
-kc = 83 #考场默认从1开始，可以自行修改
+type = 1 #四级修改为1，六级修改为2
+kc = 1 #考场默认从1开始，可以自行修改
 zwh = 1 #座位号默认从1开始，可以自行修改
 zwh_gd = 0 #确认座位号的请把0修改为1
-name = '杨庆新'#修改为自己的名字
+name = u'杨庆新'#修改为自己的名字
 zkzh = (((xxdm*1000 + 181)*10+ type)*1000 + kc) * 100 + zwh #切勿修改此处
 print name
 if type == 1:
@@ -139,10 +140,14 @@ while 1:
         continue
     f = open('yzm.png', 'rb').read()
     try:
-        yzm = chaojiying.PostPic(f, 1902)
+        yzm_result = chaojiying.PostPic(f, 1902)
     except:
         print u'验证码识别超时，如多次超时请检查网络'
         continue
+	pattern = re.compile('pic_str:(.*?)', re.S)
+    print yzm_result['pic_str']
+    yzm = yzm_result['pic_str']
+
     values['v'] = yzm
     #带验证码模拟登陆
     postdata = urllib.urlencode(values)
